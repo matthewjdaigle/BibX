@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+<xs:element name="bibliography" type="publicationList"/>
+
+<xs:complexType name="publicationList">
+    <xs:sequence>
+        <xs:element name="publication" type="publicationType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="owner" type="xs:string"/>
+</xs:complexType>
+
+<xs:complexType name="publicationType">
+    <xs:all>
+        <xs:element name="authors" type="authorsType"/>
+        <xs:element name="title" type="xs:string"/>
+        <xs:element name="area" type="xs:string" minOccurs="0"/>
+        <xs:element name="book" type="xs:string" minOccurs="0"/>
+        <xs:element name="location" type="xs:string" minOccurs="0"/>
+        <xs:element name="month" type="xs:string" minOccurs="0"/>
+        <xs:element name="notes" type="xs:string" minOccurs="0"/>
+        <xs:element name="volume" type="xs:string" minOccurs="0"/>
+        <xs:element name="number" type="xs:string" minOccurs="0"/>
+        <xs:element name="pages" type="xs:string" minOccurs="0"/>
+        <xs:element name="year" type="xs:string" minOccurs="0"/>
+        <xs:element name="type" type="xs:string" minOccurs="0"/>
+        <xs:element name="url" type="xs:string" minOccurs="0"/>
+        <xs:element name="school" type="xs:string" minOccurs="0"/>
+        <xs:element name="doi" type="xs:string" minOccurs="0"/>
+        <xs:element name="abstract" type="xs:string" minOccurs="0"/>
+    </xs:all>
+    <xs:attribute name="id" type="xs:string"/>
+</xs:complexType>
+
+<xs:complexType name="authorsType">
+    <xs:sequence>
+        <xs:element name="author" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+</xs:complexType>
+
+</xs:schema>
