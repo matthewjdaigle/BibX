@@ -20,12 +20,12 @@
     <xsl:if test="school!=''"><xsl:value-of select="school"/>, </xsl:if>
     <xsl:if test="book!=''"><i><xsl:value-of select="book"/></i>, </xsl:if>
     <!-- Print remaining details -->
+    <xsl:if test="volume!=''">vol. <xsl:value-of select="volume"/>, </xsl:if>
+    <xsl:if test="number!=''">no. <xsl:value-of select="number"/>, </xsl:if>
+    <xsl:if test="pages!=''">pp. <xsl:value-of select="pages"/>, </xsl:if>
+    <xsl:if test="location!=''"><xsl:value-of select="location"/>, </xsl:if>
     <xsl:choose>
         <xsl:when test="year!=''">
-            <xsl:if test="volume!=''">vol. <xsl:value-of select="volume"/>, </xsl:if>
-            <xsl:if test="number!=''">no. <xsl:value-of select="number"/>, </xsl:if>
-            <xsl:if test="pages!=''">pp. <xsl:value-of select="pages"/>, </xsl:if>
-            <xsl:if test="location!=''"><xsl:value-of select="location"/>, </xsl:if>
             <xsl:value-of select="month"/><xsl:text> </xsl:text><xsl:value-of select="year"/>. 
         </xsl:when>
         <xsl:otherwise>to appear. </xsl:otherwise>
