@@ -12,6 +12,7 @@ A set of XSLT files for transformations to various formats are incldued in ./XSL
 
 - Transformation to HTML, sorting by year.
 - Transformation to HTML, sorting by publication type.
+- Transformation to plain text.
 
 The citation format roughly follows IEEE style. Support for other formats is forthcoming.
 
