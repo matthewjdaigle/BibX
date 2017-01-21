@@ -4,7 +4,6 @@
 <xsl:output method="html" indent="yes"/>
 
 <xsl:template match="/">
-    <!--xsl:apply-templates-->
     <html>
         <body>
             <xsl:apply-templates/>
