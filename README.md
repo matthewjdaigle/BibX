@@ -1,5 +1,5 @@
 # BibX
-XML-based Bibliography Management
+XML-based Personal Bibliography Management
 
 ## Schema
 The schema for bibliography collections is ./Schema/Bibliography.xsd.
