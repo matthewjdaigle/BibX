@@ -13,8 +13,9 @@ A set of XSLT files for transformations to various formats are incldued in ./XSL
 - Transformation to HTML, sorting by year.
 - Transformation to HTML, sorting by publication type.
 - Transformation to plain text.
+- Transformation to BibTeX.
 
 The citation format roughly follows IEEE style. Support for other formats is forthcoming.
 
 ## Python
-A set of Python modules will be made available for editing a bibliography XML file and performing the included XSL transformations.
+Python code is available for creating bibliographies, reading in and validation bibliography files, and performing the available transformations. This code will be extended with additional functionality, and a GUI added for managing bibliography files.
