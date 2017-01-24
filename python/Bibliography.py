@@ -51,7 +51,7 @@ class Bibliography:
         schema = etree.XMLSchema(schemaRoot)
         xmlParser = etree.XMLParser(schema=schema)
         try:
-            with open(xmlFilename, 'r') as f:
+            with open(xmlFilename, 'rb') as f:
                 etree.fromstring(f.read(), xmlParser)
             return True
         except etree.XMLSchemaError:
@@ -64,12 +64,15 @@ class Bibliography:
     def print(self):
         print(etree.tounicode(self.DOM, pretty_print=True))
 
+    def write(self, filename):
+        with open(filename, 'wb') as file:
+            self.DOM.write(file, pretty_print=True, xml_declaration=True, encoding='utf-8')
+
     def export(self, xsl, outputFile):
         xslt = etree.parse(xsl)
         transform = etree.XSLT(xslt)
         newDOM = transform(self.DOM)
         with open(outputFile, 'w') as file:
-            #newDOM.write(file, pretty_print=True)
             file.write(str(newDOM))
 
     def addPublication(self, id, authors, title, type, abstract=None, location=None, school=None, book=None, volume=None,
@@ -123,11 +126,21 @@ class Bibliography:
         # Add publication to bibliography
         self.DOM.getroot().insert(0, publication)
 
+    def removePublication(self, id):
+        # Find element with given id
+        publication = self.DOM.find("publication[@id='"+id+"']")
+        if publication is not None:
+            self.DOM.getroot().remove(publication)
+        else:
+            raise RuntimeError('Publication '+id+' does not exist')
+
+
+####################################
 
 def test():
     # Create empty bibliography
     bib = Bibliography(owner='F. Author')
-    # Add a publication
+    # Add some publications
     bib.addPublication(id='Author2015Paper', title='New Paper Title', authors=['F. Author', 'S. Author', 'T. Author'], type='Conference',
                     abstract='This is the abstract.', location='City, USA', book='Proceedings of the Fancy Conference',
                     month='April', year='2015')
@@ -138,7 +151,15 @@ def test():
                     abstract='This is the abstract.', location='City, USA', book='Proceedings of the Fancy Conference',
                     month='April', year='2017')
     bib.print()
+    # Remove a publication, by id
+    bib.removePublication('Author2017Paper')
+    bib.print()
 
+    # Write bibliography to file
+    bib.write('../Test/test.xml')
+    # Validate the result
+    isValid = bib.validateFile('../Test/test.xml')
+    print('Is test.xml valid?', isValid)
 
     # Read in bibliography file
     print('Reading in Example.xml...')
@@ -154,16 +175,7 @@ def test():
     print('Transforming to BibTeX...')
     bib.export('../XSLT/bibliographyToBib.xslt','../Test/Bib.bib')
 
-    # Next steps:
-    # Python base code (Bibliography module)
-    #   Need add/remove/get publication
-    #   Need to be able to create an empty bibliography
-    #   Need to be able to open bib file, save file, save updates
-    #   Need soem sort of print for checking content (maybe plan text can do that?)
-    #   Anything else in the bib base that is needed?
-    # Python GUI (allowing editing of xml files and export functionality)
-
-
+####################################
 
 if __name__ == '__main__':
     test()
