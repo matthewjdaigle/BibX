@@ -18,4 +18,4 @@ A set of XSLT files for transformations to various formats are incldued in ./XSL
 The citation format roughly follows IEEE style. Support for other formats is forthcoming.
 
 ## Python
-Python code is available for creating bibliographies, reading in and validation bibliography files, and performing the available transformations. This code will be extended with additional functionality, and a GUI added for managing bibliography files.
+Python code is available for creating bibliographies, reading in and validation bibliography files, adding/removing publications, and performing the available transformations. This code will be extended with additional functionality, and a GUI added for managing bibliography files.
