@@ -26,7 +26,7 @@ def indent(elem, level=0):
 
 class Bibliography:
 
-    def __init__(self, owner=None, filename=None):
+    def __init__(self, filename=None, owner=None,):
         if filename is None:
             # Create empty DOM with bibliography root
             bibliography = etree.Element('bibliography')
@@ -128,11 +128,29 @@ class Bibliography:
 
     def removePublication(self, id):
         # Find element with given id
-        publication = self.DOM.find("publication[@id='"+id+"']")
+        publication = self.getPublication(id)
         if publication is not None:
             self.DOM.getroot().remove(publication)
         else:
             raise RuntimeError('Publication '+id+' does not exist')
+
+    def getOwner(self):
+        return self.DOM.getroot().get('owner')
+
+    def getPublication(self, id=None, index=None):
+        if id is None and index is None:
+            # If no id or index is given, return first one
+            return self.DOM.getroot()[0]
+        elif index is None:
+            # Then return by id
+            return self.DOM.find("publication[@id='"+id+"']")
+        else:
+            # Return by index
+            return self.DOM.getroot()[index]
+
+    def __len__(self):
+        return len(self.DOM.getroot())
+
 
 
 ####################################
@@ -140,6 +158,8 @@ class Bibliography:
 def test():
     # Create empty bibliography
     bib = Bibliography(owner='F. Author')
+    print('Owner is',bib.getOwner())
+    
     # Add some publications
     bib.addPublication(id='Author2015Paper', title='New Paper Title', authors=['F. Author', 'S. Author', 'T. Author'], type='Conference',
                     abstract='This is the abstract.', location='City, USA', book='Proceedings of the Fancy Conference',
@@ -151,12 +171,25 @@ def test():
                     abstract='This is the abstract.', location='City, USA', book='Proceedings of the Fancy Conference',
                     month='April', year='2017')
     bib.print()
+    print('This bibliograph has', len(bib),'publications.')
+
+    # Get publications
+    publication = bib.getPublication()
+    print(etree.tounicode(publication, pretty_print=True))
+    publication = bib.getPublication('Author2016Paper')
+    print(etree.tounicode(publication, pretty_print=True))
+    publication = bib.getPublication(id='Author2016Paper')
+    print(etree.tounicode(publication, pretty_print=True))
+    publication = bib.getPublication(index=2)
+    print(etree.tounicode(publication, pretty_print=True))
+    
     # Remove a publication, by id
     bib.removePublication('Author2017Paper')
     bib.print()
 
     # Write bibliography to file
     bib.write('../Test/test.xml')
+    
     # Validate the result
     isValid = bib.validateFile('../Test/test.xml')
     print('Is test.xml valid?', isValid)
