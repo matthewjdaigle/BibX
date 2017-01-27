@@ -75,8 +75,11 @@ class Bibliography:
         with open(outputFile, 'w') as file:
             file.write(str(newDOM))
 
+    def setOwner(self, owner):
+        self.DOM.getroot().set('owner',owner)
+
     def addPublication(self, id, authors, title, type, abstract=None, location=None, school=None, book=None, volume=None,
-                       number=None, month=None, year=None, doi=None, area=None, pages=None, url=None):
+                       number=None, month=None, year=None, doi=None, area=None, pages=None, url=None, notes=None):
         publication = etree.Element('publication', id=id)
         titleElt = etree.SubElement(publication, 'title')
         titleElt.text = title
@@ -87,52 +90,62 @@ class Bibliography:
             authorElt = etree.SubElement(authorsElt,'author')
             authorElt.text = author
         # Add optional elements
+        abstractElt = etree.SubElement(publication, 'abstract')
         if abstract is not None:
-            abstractElt = etree.SubElement(publication, 'abstract')
             abstractElt.text = abstract
+        locationElt = etree.SubElement(publication, 'location')
         if location is not None:
-            locationElt = etree.SubElement(publication, 'location')
             locationElt.text = location
+        schoolElt = etree.SubElement(publication, 'school')
         if school is not None:
-            schoolElt = etree.SubElement(publication, 'school')
             schoolElt.text = school
+        bookElt = etree.SubElement(publication, 'book')
         if book is not None:
-            bookElt = etree.SubElement(publication, 'book')
             bookElt.text = book
+        volumeElt = etree.SubElement(publication, 'volume')
         if volume is not None:
-            volumeElt = etree.SubElement(publication, 'volume')
             volumeElt.text = volume
+        numberElt = etree.SubElement(publication, 'number')
         if number is not None:
-            numberElt = etree.SubElement(publication, 'number')
             numberElt.text = number
+        monthElt = etree.SubElement(publication, 'month')
         if month is not None:
-            monthElt = etree.SubElement(publication, 'month')
             monthElt.text = month
+        yearElt = etree.SubElement(publication, 'year')
         if year is not None:
-            yearElt = etree.SubElement(publication, 'year')
             yearElt.text = year
+        doiElt = etree.SubElement(publication, 'doi')
         if doi is not None:
-            doiElt = etree.SubElement(publication, 'doi')
             doiElt.text = doi
+        areaElt = etree.SubElement(publication, 'area')
         if area is not None:
-            areaElt = etree.SubElement(publication, 'area')
             areaElt.text = area
+        pagesElt = etree.SubElement(publication, 'pages')
         if pages is not None:
-            pagesElt = etree.SubElement(publication, 'pages')
             pagesElt.text = pages
+        urlElt = etree.SubElement(publication, 'url')
         if url is not None:
-            urlElt = etree.SubElement(publication, 'url')
             urlElt.text = url
+        notesElt = etree.SubElement(publication, 'notes')
+        if notes is not None:
+            notesElt.text = notes
         # Add publication to bibliography
         self.DOM.getroot().insert(0, publication)
 
-    def removePublication(self, id):
-        # Find element with given id
-        publication = self.getPublication(id)
-        if publication is not None:
-            self.DOM.getroot().remove(publication)
+    def removePublication(self, id=None, index=None):
+        if id is None and index is None:
+            raise RuntimeError('id or index must be specified')
+        elif index is None:
+            # Find element with given id
+            publication = self.getPublication(id)
+            if publication is not None:
+                self.DOM.getroot().remove(publication)
+            else:
+                raise RuntimeError('Publication '+id+' does not exist')
         else:
-            raise RuntimeError('Publication '+id+' does not exist')
+            # Remove by index
+            publication = self.DOM.getroot()[index]
+            self.DOM.getroot().remove(publication)
 
     def getOwner(self):
         return self.DOM.getroot().get('owner')
@@ -185,6 +198,15 @@ def test():
     
     # Remove a publication, by id
     bib.removePublication('Author2017Paper')
+    bib.print()
+    # Remove a publication, by index
+    bib.removePublication(index=0)
+    bib.print()
+
+    # Change owner
+    bib.setOwner('T. Author')
+    bib.print()
+    bib.setOwner('F. Author')
     bib.print()
 
     # Write bibliography to file
