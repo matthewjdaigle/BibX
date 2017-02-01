@@ -124,7 +124,8 @@ class BibliographyManager(tkinter.Tk):
         #exportMenu.add_command(label='... to HTML', command=self.exportToHTML)
         #exportMenu.add_command(label='... to LaTeX', command=self.exportToLatex)
         #exportMenu.add_command(label='... to BibTeX', command=self.exportToBibtex)
-        exportMenu.add_separator()
+        #exportMenu.add_separator()
+        exportMenu.add_command(label='Custom...', command=self.exportCustom)
         #exportMenu.add_command(label='... to All Formats', command=self.exportToAll)
         menuBar.add_cascade(label='Export', menu=exportMenu)
 
@@ -280,6 +281,15 @@ class BibliographyManager(tkinter.Tk):
                 self.publicationIndex += 1
             self.setPublicationValues()
 
+    def exportCustom(self):
+        # Open up a prompt for xls/xlst files
+        filename = tkinter.filedialog.askopenfilename(title='Open XSL Transformation', defaultextension='.xslt', filetypes=[('XSLT', '.xsl*')])
+        if filename!='':
+            # Open up a prompt for file to export as
+            outputFile = tkinter.filedialog.asksaveasfile(title='Save Output As...')
+            if outputFile is not None:
+                # Perform export
+                self.bib.export(filename, outputFile.name)
 
 if __name__ == "__main__":
     app = BibliographyManager()
