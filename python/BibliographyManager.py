@@ -176,7 +176,7 @@ class BibliographyManager(tkinter.Tk):
     def save(self):
         ok = self.updatePublicationValues()
         if ok:
-            self.bib.write(filename=self.rootDir + self.fileName)
+            self.bib.write(self.filename)
 
     def saveAs(self):
         ok = self.updatePublicationValues()
@@ -201,31 +201,16 @@ class BibliographyManager(tkinter.Tk):
         publication = self.bib.getPublication(index=self.publicationIndex)
         self.publicationNumberVariable.set(str(self.publicationIndex + 1) + '/' + str(len(self.bib)))
         
-        # Set up id (an attribute)
-        self.entryVariables['id'].set(publication.get('id'))
-        
-        # Set up other fields (elements0)
-        fields = ['type', 'title', 'book', 'school', 'location', 'volume', 'number',
-                  'pages', 'month', 'year', 'notes', 'area', 'url']
+         # Set up simple fields
+        fields = ['id', 'type', 'title', 'book', 'school', 'location', 'volume', 'number',
+                  'pages', 'month', 'year', 'notes', 'area', 'url', 'authors']
         for field in fields:
-            text = publication.find(field).text
-            if text is None:
-                text = ''
+            text = publication.get(field)
             self.entryVariables[field].set(text)
-        
-        # Set up authors
-        authors = publication.find('authors')
-        authorString = ''
-        for author in authors:
-            authorString += author.text + ', '
-        authorString = authorString[0:-2]
-        self.entryVariables['authors'].set(authorString)
         
         # Set up abstract
         self.entries['abstract'].delete('1.0', tkinter.END)
-        text = publication.find('abstract').text
-        if text is None:
-            text = ''
+        text = publication.get('abstract')
         self.entries['abstract'].insert(tkinter.INSERT, text)
 
         # Configure buttons
@@ -245,24 +230,21 @@ class BibliographyManager(tkinter.Tk):
             tkinter.messagebox.showerror('Publication Error', 'Incorrect publication type specified!\nAccepted values are Journal, Conference, Unrefereed, Technical Report, and Dissertation.')
             return False
         
-        # Update values
+        # Get publication
         publication = self.bib.getPublication(index=self.publicationIndex)
-        publication.set('id',self.entryVariables['id'].get())
-        fields = ['type', 'title', 'book', 'school', 'location', 'volume', 'number',
-                  'pages', 'month', 'year', 'notes', 'area', 'url']
-        for field in fields:
-            publication.find(field).text = self.entryVariables[field].get()
 
-        authorList = self.entryVariables['authors'].get().split(',')
-        authors = publication.find('authors')
-        authors.clear()
-        for author in authorList:
-            authorElt = etree.SubElement(authors,'author')
-            authorElt.text = author.strip()
+        # Update values
+        fields = ['id', 'type', 'title', 'book', 'school', 'location', 'volume', 'number',
+                  'pages', 'month', 'year', 'notes', 'area', 'url', 'authors']
+        for field in fields:
+            publication.set(field, self.entryVariables[field].get())
         
+        # Update abstract
         newAbstract = self.entries['abstract'].get('1.0', tkinter.END)
         newAbstract = newAbstract[0:-1]
-        publication.find('abstract').text = newAbstract
+        publication.set('abstract', newAbstract)
+
+        # Return success
         return True
 
     def onPreviousButtonClick(self):

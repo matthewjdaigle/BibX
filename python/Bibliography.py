@@ -24,6 +24,51 @@ def indent(elem, level=0):
 
 ####################################
 
+class Publication:
+
+    def __init__(self, DOM):
+        self.DOM = DOM
+
+    def get(self, name):
+        if name == 'id':
+            # Id is an attribute
+            return self.DOM.get(name)
+        elif name =='authors':
+            # Authors contains child elements
+            authors = self.DOM.find('authors')
+            # Convert to string
+            authorString = ''
+            for author in authors:
+                authorString += (author.text) + ', '
+            return authorString[0:-2]
+        else:
+            # Remaining are elements
+            text = self.DOM.find(name).text
+            if text is None:
+                text = ''
+            return text
+
+    def set(self, name, value):
+        if name == 'id':
+            # Id is an atribute
+            self.DOM.set(name, value)
+        elif name == 'authors':
+            # Authors contains child elements
+            authors = self.DOM.find('authors')
+            authors.clear()
+            # Value should be a string: a comma=separated list of names
+            authorList = value.split(',')
+            for author in authorList:
+                authorElt = etree.SubElement(authors,'author')
+                authorElt.text = author.strip()
+        else:
+            self.DOM.find(name).text = value
+
+
+
+
+####################################
+
 class Bibliography:
 
     def __init__(self, filename=None, owner=None,):
@@ -139,7 +184,7 @@ class Bibliography:
             # Find element with given id
             publication = self.getPublication(id)
             if publication is not None:
-                self.DOM.getroot().remove(publication)
+                self.DOM.getroot().remove(publication.DOM)
             else:
                 raise RuntimeError('Publication '+id+' does not exist')
         else:
@@ -153,13 +198,13 @@ class Bibliography:
     def getPublication(self, id=None, index=None):
         if id is None and index is None:
             # If no id or index is given, return first one
-            return self.DOM.getroot()[0]
+            return Publication(self.DOM.getroot()[0])
         elif index is None:
             # Then return by id
-            return self.DOM.find("publication[@id='"+id+"']")
+            return Publication(self.DOM.find("publication[@id='"+id+"']"))
         else:
             # Return by index
-            return self.DOM.getroot()[index]
+            return Publication(self.DOM.getroot()[index])
 
     def __len__(self):
         return len(self.DOM.getroot())
@@ -188,13 +233,13 @@ def test():
 
     # Get publications
     publication = bib.getPublication()
-    print(etree.tounicode(publication, pretty_print=True))
+    print(etree.tounicode(publication.DOM, pretty_print=True))
     publication = bib.getPublication('Author2016Paper')
-    print(etree.tounicode(publication, pretty_print=True))
+    print(etree.tounicode(publication.DOM, pretty_print=True))
     publication = bib.getPublication(id='Author2016Paper')
-    print(etree.tounicode(publication, pretty_print=True))
+    print(etree.tounicode(publication.DOM, pretty_print=True))
     publication = bib.getPublication(index=2)
-    print(etree.tounicode(publication, pretty_print=True))
+    print(etree.tounicode(publication.DOM, pretty_print=True))
     
     # Remove a publication, by id
     bib.removePublication('Author2017Paper')
