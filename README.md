@@ -19,3 +19,6 @@ The citation format roughly follows IEEE style. Support for other formats is for
 
 ## Python Framework & GUI
 A Python framework is available for creating bibliographies, reading and validating bibliography files, adding/removing publications, and performing the available transformations. A Python GUI is built on top of this framework implementing all the available functionality.
+
+### Dependencies
+The Python framework requires Python 3.x or above (tested on 3.4+). The lxml package is also required.
