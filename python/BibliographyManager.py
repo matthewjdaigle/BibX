@@ -159,13 +159,15 @@ class BibliographyManager(tkinter.Tk):
         exportMenu = tkinter.Menu(menuBar, tearoff=0, bg='black', fg='white',
                                   activebackground=bgColor,
                                   activeforeground=fgColor)
-        #exportMenu.add_command(label='... to Text', command=self.exportToText)
-        #exportMenu.add_command(label='... to HTML', command=self.exportToHTML)
-        #exportMenu.add_command(label='... to LaTeX', command=self.exportToLatex)
-        #exportMenu.add_command(label='... to BibTeX', command=self.exportToBibtex)
-        #exportMenu.add_separator()
+        # Get list of available xslts
+        for file in os.listdir('../XSLT/'):
+            if file.endswith('.xslt'):
+                filename = '../XSLT/'+file
+                exportMenu.add_command(
+                    label=file[0:-5],
+                    command=lambda filename=filename: self.export(filename))
+        exportMenu.add_separator()
         exportMenu.add_command(label='Custom...', command=self.exportCustom)
-        #exportMenu.add_command(label='... to All Formats', command=self.exportToAll)
         menuBar.add_cascade(label='Export', menu=exportMenu)
 
         # display the menu
@@ -204,9 +206,9 @@ class BibliographyManager(tkinter.Tk):
         self.setOwner()
 
     def open(self, event=[]):
-        fileName = tkinter.filedialog.askopenfilename(title='Open Bibliography',
-                                                      defaultextension='.xml',
-                                                      filetypes=[('XML', '.xml')])
+        fileName = tkinter.filedialog.askopenfilename(
+            title='Open Bibliography', defaultextension='.xml',
+            filetypes=[('XML', '.xml')])
         if fileName:
             self.bib = Bibliography(fileName)
             self.publicationIndex = 0
@@ -244,7 +246,8 @@ class BibliographyManager(tkinter.Tk):
     def setPublicationValues(self):
         # Get first publication
         publication = self.bib.getPublication(index=self.publicationIndex)
-        self.publicationNumberVariable.set(str(self.publicationIndex + 1) + '/' + str(len(self.bib)))
+        self.publicationNumberVariable.set(
+            str(self.publicationIndex + 1) + '/' + str(len(self.bib)))
 
         # Set up simple fields
         fields = ['id', 'type', 'title', 'book', 'school', 'location',
@@ -280,8 +283,9 @@ class BibliographyManager(tkinter.Tk):
         publication = self.bib.getPublication(index=self.publicationIndex)
 
         # Update values
-        fields = ['id', 'type', 'title', 'book', 'school', 'location', 'volume', 'number',
-                  'pages', 'month', 'year', 'notes', 'area', 'url', 'authors']
+        fields = ['id', 'type', 'title', 'book', 'school', 'location',
+                  'volume', 'number', 'pages', 'month', 'year', 'notes',
+                  'area', 'url', 'authors']
         for field in fields:
             publication.set(field, self.entryVariables[field].get())
 
@@ -309,17 +313,20 @@ class BibliographyManager(tkinter.Tk):
                 self.publicationIndex += 1
             self.setPublicationValues()
 
+    def export(self, filename):
+        # Open up a prompt for file to export as
+        outputFile = tkinter.filedialog.asksaveasfile(title='Save Output As...')
+        if outputFile is not None:
+            # Perform export
+            self.bib.export(filename, outputFile.name)
+
     def exportCustom(self):
         # Open up a prompt for xls/xlst files
         filename = tkinter.filedialog.askopenfilename(
             title='Open XSL Transformation', defaultextension='.xslt',
             filetypes=[('XSLT', '.xsl*')])
         if filename != '':
-            # Open up a prompt for file to export as
-            outputFile = tkinter.filedialog.asksaveasfile(title='Save Output As...')
-            if outputFile is not None:
-                # Perform export
-                self.bib.export(filename, outputFile.name)
+            self.export(filename)
 
 if __name__ == "__main__":
     app = BibliographyManager()
