@@ -277,15 +277,15 @@ def test():
 
     # Test transformations
     print('Transforming to HTML, organized by year...')
-    bib.export('../XSLT/bibliographyToHTMLByYear.xslt',
+    bib.export('../XSLT/To HTML By Year.xslt',
                '../Test/BibByYear.html')
     print('Transforming to HTML, organized by type...')
-    bib.export('../XSLT/bibliographyToHTMLByType.xslt',
+    bib.export('../XSLT/to HTML By Type.xslt',
                '../Test/BibByType.html')
     print('Transforming to plain text...')
-    bib.export('../XSLT/bibliographyToPlainText.xslt', '../Test/Bib.txt')
+    bib.export('../XSLT/To Plain Text.xslt', '../Test/Bib.txt')
     print('Transforming to BibTeX...')
-    bib.export('../XSLT/bibliographyToBib.xslt',
+    bib.export('../XSLT/to BibTeX.xslt',
                '../Test/Bib.bib')
 
 ####################################
