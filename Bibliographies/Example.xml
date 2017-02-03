@@ -2,14 +2,22 @@
 <bibliography owner="F. Author">
   <publication id="AuthorTechReport">
     <authors>
+        <author>F. Author</author>
     </authors>
     <title>A Technical Report</title>
     <type>Technical Report</type>
     <book>TR-001</book>
     <location>An Institute of Research</location>
+    <school></school>
+    <volume></volume>
+    <number></number>
+    <pages></pages>
+    <month>April</month>
+    <year></year>
     <doi/>
     <url>technicalReport.pdf</url>
     <area>Science</area>
+    <notes></notes>
     <abstract>A short abstract.</abstract>
   </publication>
     <publication id="Author2017Paper">
