@@ -5,6 +5,7 @@
 # Imports
 from lxml import etree
 
+
 ####################################
 
 def indent(elem, level=0):
@@ -22,6 +23,7 @@ def indent(elem, level=0):
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
 
+
 ####################################
 
 class Publication:
@@ -33,7 +35,7 @@ class Publication:
         if name == 'id':
             # Id is an attribute
             return self.DOM.get(name)
-        elif name =='authors':
+        elif name == 'authors':
             # Authors contains child elements
             authors = self.DOM.find('authors')
             # Convert to string
@@ -59,12 +61,10 @@ class Publication:
             # Value should be a string: a comma=separated list of names
             authorList = value.split(',')
             for author in authorList:
-                authorElt = etree.SubElement(authors,'author')
+                authorElt = etree.SubElement(authors, 'author')
                 authorElt.text = author.strip()
         else:
             self.DOM.find(name).text = value
-
-
 
 
 ####################################
@@ -111,7 +111,8 @@ class Bibliography:
 
     def write(self, filename):
         with open(filename, 'wb') as file:
-            self.DOM.write(file, pretty_print=True, xml_declaration=True, encoding='utf-8')
+            self.DOM.write(file, pretty_print=True, xml_declaration=True,
+                           encoding='utf-8')
 
     def export(self, xsl, outputFile):
         xslt = etree.parse(xsl)
@@ -121,18 +122,20 @@ class Bibliography:
             file.write(str(newDOM))
 
     def setOwner(self, owner):
-        self.DOM.getroot().set('owner',owner)
+        self.DOM.getroot().set('owner', owner)
 
-    def addPublication(self, id, authors, title, type, abstract=None, location=None, school=None, book=None, volume=None,
-                       number=None, month=None, year=None, doi=None, area=None, pages=None, url=None, notes=None):
+    def addPublication(self, id, authors, title, type, abstract=None,
+                       location=None, school=None, book=None, volume=None,
+                       number=None, month=None, year=None, doi=None, area=None,
+                       pages=None, url=None, notes=None):
         publication = etree.Element('publication', id=id)
         titleElt = etree.SubElement(publication, 'title')
         titleElt.text = title
         typeElt = etree.SubElement(publication, 'type')
         typeElt.text = type
-        authorsElt = etree.SubElement(publication,'authors')
+        authorsElt = etree.SubElement(publication, 'authors')
         for author in authors:
-            authorElt = etree.SubElement(authorsElt,'author')
+            authorElt = etree.SubElement(authorsElt, 'author')
             authorElt.text = author
         # Add optional elements
         abstractElt = etree.SubElement(publication, 'abstract')
@@ -210,26 +213,33 @@ class Bibliography:
         return len(self.DOM.getroot())
 
 
-
 ####################################
 
 def test():
     # Create empty bibliography
     bib = Bibliography(owner='F. Author')
-    print('Owner is',bib.getOwner())
-    
+    print('Owner is', bib.getOwner())
+
     # Add some publications
-    bib.addPublication(id='Author2015Paper', title='New Paper Title', authors=['F. Author', 'S. Author', 'T. Author'], type='Conference',
-                    abstract='This is the abstract.', location='City, USA', book='Proceedings of the Fancy Conference',
-                    month='April', year='2015')
-    bib.addPublication(id='Author2016Paper', title='New Paper Title', authors=['S. Author', 'F. Author'], type='Journal',
-                    abstract='This is the abstract.', book='Journal of Papers', pages='100-110', volume='3', number='10',
-                    month='April', year='2016')
-    bib.addPublication(id='Author2017Paper', title='Another Paper Title', authors=['F. Author'], type='Conference',
-                    abstract='This is the abstract.', location='City, USA', book='Proceedings of the Fancy Conference',
-                    month='April', year='2017')
+    bib.addPublication(id='Author2015Paper', title='New Paper Title',
+                       authors=['F. Author', 'S. Author', 'T. Author'],
+                       type='Conference', abstract='This is the abstract.',
+                       location='City, USA',
+                       book='Proceedings of the Fancy Conference',
+                       month='April', year='2015')
+    bib.addPublication(id='Author2016Paper', title='New Paper Title',
+                       authors=['S. Author', 'F. Author'], type='Journal',
+                       abstract='This is the abstract.',
+                       book='Journal of Papers', pages='100-110', volume='3',
+                       number='10',
+                       month='April', year='2016')
+    bib.addPublication(id='Author2017Paper', title='Another Paper Title',
+                       authors=['F. Author'], type='Conference',
+                       abstract='This is the abstract.', location='City, USA',
+                       book='Proceedings of the Fancy Conference',
+                       month='April', year='2017')
     bib.print()
-    print('This bibliograph has', len(bib),'publications.')
+    print('This bibliograph has', len(bib), 'publications.')
 
     # Get publications
     publication = bib.getPublication()
@@ -240,7 +250,7 @@ def test():
     print(etree.tounicode(publication.DOM, pretty_print=True))
     publication = bib.getPublication(index=2)
     print(etree.tounicode(publication.DOM, pretty_print=True))
-    
+
     # Remove a publication, by id
     bib.removePublication('Author2017Paper')
     bib.print()
@@ -256,7 +266,7 @@ def test():
 
     # Write bibliography to file
     bib.write('../Test/test.xml')
-    
+
     # Validate the result
     isValid = bib.validateFile('../Test/test.xml')
     print('Is test.xml valid?', isValid)
@@ -267,13 +277,16 @@ def test():
 
     # Test transformations
     print('Transforming to HTML, organized by year...')
-    bib.export('../XSLT/bibliographyToHTMLByYear.xslt','../Test/BibByYear.html')
+    bib.export('../XSLT/bibliographyToHTMLByYear.xslt',
+               '../Test/BibByYear.html')
     print('Transforming to HTML, organized by type...')
-    bib.export('../XSLT/bibliographyToHTMLByType.xslt','../Test/BibByType.html')
+    bib.export('../XSLT/bibliographyToHTMLByType.xslt',
+               '../Test/BibByType.html')
     print('Transforming to plain text...')
-    bib.export('../XSLT/bibliographyToPlainText.xslt','../Test/Bib.txt')
+    bib.export('../XSLT/bibliographyToPlainText.xslt', '../Test/Bib.txt')
     print('Transforming to BibTeX...')
-    bib.export('../XSLT/bibliographyToBib.xslt','../Test/Bib.bib')
+    bib.export('../XSLT/bibliographyToBib.xslt',
+               '../Test/Bib.bib')
 
 ####################################
 
