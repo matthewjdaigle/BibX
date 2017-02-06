@@ -38,7 +38,10 @@ class BibliographyManager(tkinter.Tk):
         self.config(bg=bgColor)
 
         # Create profile image
-        photo = tkinter.PhotoImage(file='B.png')
+        if tkinter.TkVersion < 8.6:
+            photo = tkinter.PhotoImage(file='B.gif')
+        else:
+            photo = tkinter.PhotoImage(file='B.png')
         self.profileImageLabel = tkinter.Label(self, image=photo,
                                                anchor='center', bg=bgColor,
                                                height=100)
@@ -162,7 +165,7 @@ class BibliographyManager(tkinter.Tk):
         # Get list of available xslts
         for file in os.listdir('../XSLT/'):
             if file.endswith('.xslt'):
-                filename = '../XSLT/'+file
+                filename = '../XSLT/' + file
                 exportMenu.add_command(
                     label=file[0:-5],
                     command=lambda filename=filename: self.export(filename))
@@ -327,6 +330,7 @@ class BibliographyManager(tkinter.Tk):
             filetypes=[('XSLT', '.xsl*')])
         if filename != '':
             self.export(filename)
+
 
 if __name__ == "__main__":
     app = BibliographyManager()
