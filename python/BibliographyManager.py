@@ -8,13 +8,24 @@ import tkinter
 import tkinter.messagebox
 import tkinter.filedialog
 from Bibliography import Bibliography
+from configparser import ConfigParser
 
 
 class BibliographyManager(tkinter.Tk):
 
     def __init__(self):
+        # Open config file
+        parser = ConfigParser()
+        parser.read('../BibX.config')
+        self.configuration = dict()
+        for section in parser.sections():
+            for name, value in parser.items(section):
+                self.configuration[name] = value
+
         # Create Bibliography object
-        self.filename = '../Bibliographies/Example.xml'
+        if 'file' not in self.configuration:
+            self.configuraiton[file] = 'Example.xml'
+        self.filename = '../Bibliographies/' + self.configuration['file']
         self.bib = Bibliography(filename=self.filename)
 
         # Initialize some member variables
