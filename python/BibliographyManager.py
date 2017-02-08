@@ -24,7 +24,7 @@ class BibliographyManager(tkinter.Tk):
 
         # Create Bibliography object
         if 'file' not in self.configuration:
-            self.configuraiton[file] = 'Example.xml'
+            self.configuration['file'] = 'Example.xml'
         self.filename = '../Bibliographies/' + self.configuration['file']
         self.bib = Bibliography(filename=self.filename)
 
