@@ -16,7 +16,7 @@ class BibliographyManager(tkinter.Tk):
     def __init__(self):
         # Open config file
         parser = ConfigParser()
-        parser.read('../BibX.config')
+        parser.read('BibX.config')
         self.configuration = dict()
         for section in parser.sections():
             for name, value in parser.items(section):
@@ -24,8 +24,8 @@ class BibliographyManager(tkinter.Tk):
 
         # Create Bibliography object
         if 'file' not in self.configuration:
-            self.configuration['file'] = 'Example.xml'
-        self.filename = '../Bibliographies/' + self.configuration['file']
+            self.configuration['file'] = '../Test/example.xml'
+        self.filename = self.configuration['file']
         self.bib = Bibliography(filename=self.filename)
 
         # Initialize some member variables
@@ -86,29 +86,21 @@ class BibliographyManager(tkinter.Tk):
 
         # Create publication number label
         self.publicationNumberVariable = tkinter.StringVar()
-        self.publicationNumberLabel = tkinter.Label(self,
-                                                    textvariable=self.publicationNumberVariable,
-                                                    anchor='center',
-                                                    font='Arial 10 bold',
-                                                    bg=bgColor, fg=fgColor)
+        self.publicationNumberLabel = tkinter.Label(
+            self, textvariable=self.publicationNumberVariable,
+            anchor='center', font='Arial 10 bold', bg=bgColor, fg=fgColor)
         self.publicationNumberLabel.grid(column=0, row=4)
 
         # Create previous/next buttons
-        self.previousButton = tkinter.Button(self, text='Previous',
-                                             command=self.onPreviousButtonClick,
-                                             bg=bgColor, fg=fgColor,
-                                             font='Arial 10 bold', bd=5,
-                                             relief='ridge',
-                                             activeforeground=bgColor,
-                                             activebackground=fgColor)
+        self.previousButton = tkinter.Button(
+            self, text='Previous', command=self.onPreviousButtonClick,
+            bg=bgColor, fg=fgColor, font='Arial 10 bold', bd=5,
+            relief='ridge', activeforeground=bgColor, activebackground=fgColor)
         self.previousButton.grid(column=1, row=4, sticky='EW')
-        self.nextButton = tkinter.Button(self, text='Next',
-                                         command=self.onNextButtonClick,
-                                         bg=bgColor, fg=fgColor,
-                                         font='Arial 10 bold', bd=5,
-                                         relief='ridge',
-                                         activeforeground=bgColor,
-                                         activebackground=fgColor)
+        self.nextButton = tkinter.Button(
+            self, text='Next', command=self.onNextButtonClick,
+            bg=bgColor, fg=fgColor, font='Arial 10 bold', bd=5, relief='ridge',
+            activeforeground=bgColor, activebackground=fgColor)
         self.nextButton.grid(column=2, row=4, sticky='EW')
         currentRow = 6
 
@@ -120,11 +112,9 @@ class BibliographyManager(tkinter.Tk):
             # Create label
             self.labelVariables[field] = tkinter.StringVar()
             self.labelVariables[field].set(field.capitalize())
-            self.labels[field] = tkinter.Label(self,
-                                               textvariable=self.labelVariables[field],
-                                               anchor='nw',
-                                               font='Arial 10 bold',
-                                               bg=bgColor, fg=fgColor)
+            self.labels[field] = tkinter.Label(
+                self, textvariable=self.labelVariables[field], anchor='nw',
+                font='Arial 10 bold', bg=bgColor, fg=fgColor)
             self.labels[field].grid(column=0, row=index + currentRow,
                                     sticky='EW')
             # Create entry variable
@@ -138,10 +128,9 @@ class BibliographyManager(tkinter.Tk):
                 self.labels[field].config(height=20)
             else:
                 # Create entry GUI object
-                self.entries[field] = tkinter.Entry(self,
-                                                    textvariable=self.entryVariables[field],
-                                                    width=100, font='Arial 10',
-                                                    relief='flat')
+                self.entries[field] = tkinter.Entry(
+                    self, textvariable=self.entryVariables[field],
+                    width=100, font='Arial 10', relief='flat')
             # Set grid location
             self.entries[field].grid(column=1, row=index + currentRow,
                                      columnspan=2, sticky='EW')
