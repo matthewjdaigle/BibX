@@ -1,7 +1,7 @@
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../BibX/'))
-from Bibliography import Bibliography
+sys.path.insert(0, os.path.abspath('..'))
+from BibX import Bibliography
 from lxml import etree
 
 
