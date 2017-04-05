@@ -14,6 +14,7 @@
 <xsl:template match="publication">
     <!--Print opening tag and id-->
     <xsl:choose>
+        <xsl:when test="type='Book'">@book{</xsl:when>
         <xsl:when test="type='Journal'">@article{</xsl:when>
         <xsl:when test="type='Conference'">@conference{</xsl:when>
         <xsl:when test="type='Unrefereed'">@conference{</xsl:when>

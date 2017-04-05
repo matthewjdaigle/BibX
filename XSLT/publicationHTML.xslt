@@ -6,8 +6,9 @@
     <!--Print Authors-->
     <xsl:apply-templates select="authors"/>
     <!--Print Title, include URL if available-->
+    <xsl:text>"</xsl:text>
     <xsl:choose>
-        <xsl:when test="url!=''">"<a><xsl:attribute name="href"><xsl:value-of select="url"/></xsl:attribute>
+        <xsl:when test="url!=''"><a><xsl:attribute name="href"><xsl:value-of select="url"/></xsl:attribute>
             <xsl:value-of select="title"/></a>
         </xsl:when>
         <xsl:otherwise>

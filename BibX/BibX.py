@@ -278,7 +278,7 @@ class BibliographyManager(tkinter.Tk):
     def updatePublicationValues(self, event=[]):
         # Check that type is one of the accepted values
         type = self.entryVariables['type'].get()
-        if type != 'Conference' and type != 'Journal' and type != 'Unrefereed' and type != 'Dissertation' and type != 'Technical Report':
+        if type != 'Book' and type != 'Conference' and type != 'Journal' and type != 'Unrefereed' and type != 'Dissertation' and type != 'Technical Report':
             tkinter.messagebox.showerror('Publication Error', 'Incorrect publication type specified!\nAccepted values are Journal, Conference, Unrefereed, Technical Report, and Dissertation.')
             return False
 

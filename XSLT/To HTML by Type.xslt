@@ -14,6 +14,12 @@
 <xsl:key name="publicationsByYear" match="publication" use="year" />
 
 <xsl:template match="bibliography">
+    <xsl:if test="count(publication[type = 'Book'])&gt;0">
+        <h2>Book</h2>
+        <ul>
+            <xsl:apply-templates select="publication[type = 'Book']"/>
+        </ul>
+    </xsl:if>
     <xsl:if test="count(publication[type = 'Journal'])&gt;0">
         <h2>Journal</h2>
         <ul>
