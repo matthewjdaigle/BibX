@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>BibX</title>
+    <link rel="stylesheet" href="./photon/css/photon.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
+  </head>
+
+  <body>
+
+    <div class="window">
+
+      <header class="toolbar toolbar-header">
+        <div class="toolbar-actions">
+          <div class="btn-group">
+            <button class="btn btn-large btn-default" id="openButton">
+              <span class="icon icon-folder"></span>
+            </button>
+            <button class="btn btn-large btn-default" id="openButton">
+              <span class="icon icon-floppy"></span>
+            </button>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-large btn-default" id="openButton">
+              <span class="icon icon-plus-circled"></span>
+            </button>
+            <button class="btn btn-large btn-default" id="openButton">
+              <span class="icon icon-minus-circled"></span>
+            </button>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-large btn-default" id="openButton">
+              <span class="icon icon-left"></span>
+            </button>
+            <button class="btn btn-large btn-default" id="openButton">
+              <span class="icon icon-right"></span>
+            </button>
+          </div>
+
+          <div class="btn-group">
+              <button class="btn btn-large btn-default" id="openButton">
+                <span class="icon icon-export"></span>
+              </button>
+          </div>
+        </div>
+      </header>
+
+      <div class="window-content">
+        <div class="pane-group">
+
+          <div class="pane-med" id="publications">
+            <nav class="nav-group">
+              <h5 class="nav-group-title" id="owner-name">No bibliography loaded.</h5>
+              <span id="pub-list"></span>
+            </nav>
+          </div>
+
+          <div class="pane padded" id="edit-pub">
+
+            <h4>Edit Publication</h4>
+
+            <form>
+              <div class="form-group">
+                <label class="label-cell">Type</label>
+                <select class="form-control" id="pub-type">
+                  <option>Conference</option>
+                  <option>Journal</option>
+                  <option>Book</option>
+                  <option>Dissertation</option>
+                  <option>Technical Report</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="label-cell">Title</label>
+                <input class="form-control" placeholder="My Title" id="pub-title">
+              </div>
+
+              <div class="form-group">
+                <label class="label-cell">Authors</label>
+                <input class="form-control" placeholder="My Authors" id="pub-authors">
+              </div>
+
+              <div class="form-group">
+                <label class="label-cell">Book</label>
+                <input class="form-control" id="pub-book">
+              </div>
+
+              <div class="form-group">
+                <label class="label-cell">School</label>
+                <input class="form-control" id="pub-school">
+              </div>
+
+              <div class="form-group">
+                <label class="label-cell">Location</label>
+                <input class="form-control" id="pub-location">
+              </div>
+
+              <div class="form-group">
+                <label class="label-cell">Volume</label>
+                <input class="form-control" id="pub-volume">
+              </div>
+
+              <div class="form-group">
+                <label class="label-cell">Number</label>
+                <input class="form-control" id="pub-number">
+              </div>
+
+              <div class="form-group">
+                <label class="label-cell">Pages</label>
+                <input class="form-control underline-input" id="pub-pages">
+              </div>
+
+              <div class="form-group">
+                <label class="label-cell">Month</label>
+                <input class="form-control" id="pub-month">
+              </div>
+
+              <div class="form-group">
+                <label class="label-cell">Year</label>
+                <input class="form-control" id="pub-year">
+              </div>
+
+              <div class="form-group">
+                <label class="label-cell">Notes</label>
+                <input class="form-control" id="pub-notes">
+              </div>
+
+              <div class="form-group">
+                <label class="label-cell">URL</label>
+                <input class="form-control" id="pub-url">
+              </div>
+
+              <div class="form-group">
+                <label class="label-cell">Id</label>
+                <input class="form-control" placeholder="MyId" id="pub-id">
+              </div>
+
+              <div class="form-group">
+                <label class="label-cell">Abstract</label>
+                <textarea class="form-control full-border" rows="6" id="pub-abstract"></textarea>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+      <footer class="toolbar toolbar-footer">
+        <h1 class="title" id="filename-footer"></h1>
+      </footer-->
+
+    </div>
+
+
+
+
+
+  </body>
+  <script type="text/javascript" src="./js/renderer.js"></script>
+</html>
