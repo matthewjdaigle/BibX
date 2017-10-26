@@ -1,14 +1,23 @@
 var dialog = require('electron').remote.dialog;
 var fs = require('fs');
 
-// Get various elements
+// Get button elements
 var openButton = document.getElementById('openButton');
+var saveButton = document.getElementById('saveButton');
+var addButton = document.getElementById('addButton');
+var removeButton = document.getElementById('removeButton');
+var leftButton = document.getElementById('leftButton');
+var rightButton = document.getElementById('rightButton');
+var exportButton = document.getElementById('exportButton');
+
+// Get other elements
 var publications = document.getElementById('publications')
 var editpub = document.getElementById('edit-pub');
 var publist = document.getElementById('pub-list');
 var ownerName = document.getElementById('owner-name');
 var filenameFooter = document.getElementById('filename-footer');
 
+// Get input elements
 var pubType = document.getElementById('pub-type')
 var pubTitle = document.getElementById('pub-title');
 var pubAuthors = document.getElementById('pub-authors');
@@ -25,7 +34,14 @@ var pubUrl = document.getElementById('pub-url');
 var pubId = document.getElementById('pub-id');
 var pubAbstract = document.getElementById('pub-abstract');
 
+// Add button listeners
 openButton.addEventListener('click', openBib);
+saveButton.addEventListener('click', saveBib);
+//addButton.addEventListener('click', addPub);
+//removeButton.addEventListener('click', removePub);
+upButton.addEventListener('click', navUp);
+downButton.addEventListener('click', navDown);
+//exportButton.addEventListener('click', exportBib);
 
 pubType.addEventListener('focusout', updateActivePub);
 pubTitle.addEventListener('focusout', updateActivePub);
@@ -75,6 +91,7 @@ function loadpubs(xmlFile) {
 // Pub node list
 var bibxml;
 var activePub;
+var activePubIndex;
 
 function writePubs(xmlData) {
   bibxml = xmlData;
@@ -98,27 +115,29 @@ function writePubs(xmlData) {
   }
   publist.innerHTML = content;
   // Add event listeners
-  for (var i=0; i<pubs.length; i++) {
+  for (i=0; i<pubs.length; i++) {
     var pub = pubs[i];
     var id = pubs[i].id;
     elt = document.getElementById(id);
-    (function(pub) {
+    (function(pub, i) {
       elt.addEventListener('click', function(){
-        fillEditPub(pub);
+        fillEditPub(pub, i);
       }, false);
-    })(pub)
+    })(pub, i)
   }
   // Fill in first pub
   activePub = pubs[0];
-  fillEditPub(pubs[0]);
+  fillEditPub(pubs[0], 0);
 }
 
-function fillEditPub(pub) {
+function fillEditPub(pub, index) {
   // Inactivate currently selected pub
   document.getElementById(activePub.id).className = 'nav-group-item';
   // Activate new pub
   document.getElementById(pub.id).className = 'nav-group-item active';
   activePub = pub;
+  activePubIndex = index;
+  console.log(pub, index);
   // Set form inputs
   pubType.value = pub.getElementsByTagName('type')[0].innerHTML;
   pubTitle.value = pub.getElementsByTagName('title')[0].innerHTML;
@@ -147,4 +166,22 @@ function fillEditPub(pub) {
 function updateActivePub() {
   pubTag = this.id.substring(4,this.id.length);
   bibxml.getElementById(activePub.id).getElementsByTagName(pubTag)[0].innerHTML = this.value;
+}
+
+function saveBib() {
+  filename = filenameFooter.innerHTML;
+  if (filename.length>0) {
+    fs.writeFile(filename, new XMLSerializer().serializeToString(bibxml));
+  }
+}
+
+function navUp() {
+  if (activePubIndex>0) {
+    fillEditPub(bibliography.getElementsByTagName('publication')[activePubIndex-1], activePubIndex-1)
+  }
+}
+function navDown() {
+  if (activePubIndex+1<bibliography.getElementsByTagName('publication').length) {
+    fillEditPub(bibliography.getElementsByTagName('publication')[activePubIndex+1], activePubIndex+1)
+  }
 }
