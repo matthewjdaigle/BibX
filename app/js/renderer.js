@@ -32,13 +32,14 @@ var pubYear = document.getElementById('pub-year');
 var pubNotes = document.getElementById('pub-notes');
 var pubUrl = document.getElementById('pub-url');
 var pubId = document.getElementById('pub-id');
+var pubDoi = document.getElementById('pub-doi');
 var pubAbstract = document.getElementById('pub-abstract');
 
 // Add button listeners
 openButton.addEventListener('click', openBib);
 saveButton.addEventListener('click', saveBib);
-//addButton.addEventListener('click', addPub);
-//removeButton.addEventListener('click', removePub);
+addButton.addEventListener('click', addPub);
+removeButton.addEventListener('click', removePub);
 upButton.addEventListener('click', navUp);
 downButton.addEventListener('click', navDown);
 //exportButton.addEventListener('click', exportBib);
@@ -57,6 +58,7 @@ pubYear.addEventListener('focusout', updateActivePub);
 pubNotes.addEventListener('focusout', updateActivePub);
 pubUrl.addEventListener('focusout', updateActivePub);
 pubId.addEventListener('focusout', updateActivePub);
+pubDoi.addEventListener('focusout', updateActivePub);
 pubAbstract.addEventListener('focusout', updateActivePub);
 
 function openBib() {
@@ -85,7 +87,6 @@ function loadpubs(xmlFile) {
     xmlData = parser.parseFromString(data,"text/xml");
     writePubs(xmlData);
   });
-
 }
 
 // Pub node list
@@ -110,8 +111,8 @@ function writePubs(xmlData) {
     }
     content += '<span id="' + id + '" class="nav-group-item' + active + '">';
     content += '<span class="icon icon-doc-text-inv"></span>';
-    content += id;
-    content += '</span>';
+    content += '<span id="inner_' + id + '">' + id;
+    content += '</span></span>';
   }
   publist.innerHTML = content;
   // Add event listeners
@@ -137,7 +138,6 @@ function fillEditPub(pub, index) {
   document.getElementById(pub.id).className = 'nav-group-item active';
   activePub = pub;
   activePubIndex = index;
-  console.log(pub, index);
   // Set form inputs
   pubType.value = pub.getElementsByTagName('type')[0].innerHTML;
   pubTitle.value = pub.getElementsByTagName('title')[0].innerHTML;
@@ -160,18 +160,46 @@ function fillEditPub(pub, index) {
   pubNotes.value = pub.getElementsByTagName('notes')[0].innerHTML;
   pubUrl.value = pub.getElementsByTagName('url')[0].innerHTML;
   pubId.value = pub.id;
+  pubDoi.value = pub.getElementsByTagName('doi')[0].innerHTML;
   pubAbstract.value = pub.getElementsByTagName('abstract')[0].innerHTML;
 }
 
 function updateActivePub() {
   pubTag = this.id.substring(4,this.id.length);
-  bibxml.getElementById(activePub.id).getElementsByTagName(pubTag)[0].innerHTML = this.value;
+  newValue = this.value;
+  if (pubTag == 'authors') {
+    // Parse author names
+    authorList = this.value.split(',');
+    authorsNode = activePub.getElementsByTagName('authors')[0];
+    authorsNode.innerHTML = '';
+    for (i=0; i<authorList.length; i++) {
+      authorNode = bibxml.createElement('author');
+      authorNode.innerHTML = authorList[i].trim();
+      authorsNode.appendChild(authorNode);
+    }
+    console.log(activePub);
+  }
+  else if (pubTag == 'id') {
+    document.getElementById(activePub.id).id = this.value;
+    document.getElementById('inner_'+activePub.id).id = 'inner_'+this.value;
+    activePub.id = this.value;
+    document.getElementById('inner_'+activePub.id).innerHTML = this.value;
+  }
+  else {
+    bibxml.getElementById(activePub.id).getElementsByTagName(pubTag)[0].innerHTML = this.value;
+  }
 }
 
 function saveBib() {
   filename = filenameFooter.innerHTML;
   if (filename.length>0) {
-    fs.writeFile(filename, new XMLSerializer().serializeToString(bibxml));
+    fs.writeFile(filename, new XMLSerializer().serializeToString(bibxml), (err) => {
+      if (err) {
+          alert("An error ocurred writing the file" + err.message);
+          console.log(err);
+          return;
+      }
+    });
   }
 }
 
@@ -184,4 +212,49 @@ function navDown() {
   if (activePubIndex+1<bibliography.getElementsByTagName('publication').length) {
     fillEditPub(bibliography.getElementsByTagName('publication')[activePubIndex+1], activePubIndex+1)
   }
+}
+
+var newCount = 0;
+
+function addPub() {
+  // Create pub node
+  pub = activePub.cloneNode(true);
+  pub.getElementsByTagName('type')[0].innerHTML = 'Conference';
+  pub.getElementsByTagName('title')[0].innerHTML = 'My Title';
+  pub.getElementsByTagName('authors')[0] = pub.getElementsByTagName('authors')[0].children[0];
+  pub.getElementsByTagName('authors')[0].children[0].innerHTML = 'My Authors';
+  pub.getElementsByTagName('book')[0].innerHTML = '';
+  pub.getElementsByTagName('school')[0].innerHTML = '';
+  pub.getElementsByTagName('location')[0].innerHTML = '';
+  pub.getElementsByTagName('volume')[0].innerHTML = '';
+  pub.getElementsByTagName('number')[0].innerHTML = '';
+  pub.getElementsByTagName('pages')[0].innerHTML = '';
+  pub.getElementsByTagName('month')[0].innerHTML = '';
+  pub.getElementsByTagName('year')[0].innerHTML = '';
+  pub.getElementsByTagName('notes')[0].innerHTML = '';
+  pub.getElementsByTagName('url')[0].innerHTML = '';
+  pub.id = 'NewPublication' + newCount++;
+  pub.getElementsByTagName('doi')[0].innerHTML = '';
+  pub.getElementsByTagName('abstract')[0].innerHTML = '';
+  // Insert into bibxml
+  firstPub = bibxml.getElementsByTagName('publication')[0]
+  bibxml.getElementsByTagName('bibliography')[0].insertBefore(pub, firstPub);
+  writePubs(bibxml);
+}
+
+function removePub() {
+  dialog.showMessageBox({
+    type: 'question',
+    message: 'Delete ' + activePub.id + '? This cannot be undone.',
+    buttons: ['OK', 'Cancel'],
+    title: 'Delete Publication?' }, function () {
+      deletePub(activePub, activePubIndex);
+    }
+  );
+}
+
+function deletePub(pub, index) {
+  // Delete from xml
+  bibxml.documentElement.removeChild(pub);
+  writePubs(bibxml);
 }
