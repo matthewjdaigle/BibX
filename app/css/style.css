@@ -5,7 +5,6 @@
 
 .padded {
   padding: 15px;
-  padding-top: 0px;
 }
 
 .form-group {
@@ -15,73 +14,5 @@
 .label-cell {
   width: 80px;
   min-width:80px;
+  padding-top:0.5em;
 }
-
-.form-control {
-  border: 0px;
-  border-bottom: 1px solid orange;
-  border-radius: 4px;
-}
-.form-control:focus {
-  border-color: black;
-  box-shadow: 0 0 0 0;
-}
-.full-border {
-  border: 1px solid orange;
-}
-
-
-/*input.cell, select.cell, textarea.cell {
-  width: auto;
-  flex: 1;
-}*/
-
-
-/*@import url('https://fonts.googleapis.com/css?family=Ubuntu');
-
-html, body {
-  height: 100%;
-}
-
-body {
-  padding: 0em;
-  margin:auto 0em;
-  background: #444444;
-  font-family: 'Ubuntu', sans-serif;
-  color: #DDDDDD;
-  font-size: 100%;
-}
-
-#main {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-#top {
-  width: 100%;
-  background: #222222;
-  padding: 1em;
-}
-
-#bibliography {
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-  height: 100%;
-}
-
-#publications {
-  display: flex;
-  flex-direction: column;
-  border-right: 1px solid #222222;
-  width: 250px;
-  overflow: scroll;
-}
-
-#edit-pub {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  min-width: 0;
-}*/

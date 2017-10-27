@@ -177,7 +177,6 @@ function updateActivePub() {
       authorNode.innerHTML = authorList[i].trim();
       authorsNode.appendChild(authorNode);
     }
-    console.log(activePub);
   }
   else if (pubTag == 'id') {
     document.getElementById(activePub.id).id = this.value;
