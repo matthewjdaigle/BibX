@@ -250,11 +250,17 @@ function saveAsBib() {
 }
 
 function navUp() {
+  if (bibxml==null) {
+    return;
+  }
   if (activePubIndex>0) {
     fillEditPub(bibliography.getElementsByTagName('publication')[activePubIndex-1], activePubIndex-1)
   }
 }
 function navDown() {
+  if (bibxml==null) {
+    return;
+  }
   if (activePubIndex+1<bibliography.getElementsByTagName('publication').length) {
     fillEditPub(bibliography.getElementsByTagName('publication')[activePubIndex+1], activePubIndex+1)
   }
@@ -263,6 +269,9 @@ function navDown() {
 var newCount = 0;
 
 function addPub() {
+  if (bibxml==null) {
+    return;
+  }
   // Create pub node
   pub = bibxml.createElement('publication');
   // Create children
@@ -309,6 +318,12 @@ function addPub() {
 }
 
 function removePub() {
+  if (bibxml==null) {
+    return;
+  }
+  if (bibxml.getElementsByTagName('publication').length==0) {
+    return;
+  }
   dialog.showMessageBox({
     type: 'question',
     message: 'Delete ' + activePub.id + '? This cannot be undone.',
