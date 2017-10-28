@@ -65,6 +65,10 @@ pubId.addEventListener('focusout', updateActivePub);
 pubDoi.addEventListener('focusout', updateActivePub);
 pubAbstract.addEventListener('focusout', updateActivePub);
 
+ownerName.addEventListener('focusin', changeOwner);
+ownerName.addEventListener('change', setOwner);
+ownerName.addEventListener('focusout', checkOwner);
+
 function openBib() {
   dialog.showOpenDialog({
     filters: [{ name: 'xml', extensions: ['xml'] }],
@@ -120,7 +124,7 @@ function writePubs(xmlData) {
   // Go through xml dom and write list of pubs
   bibliography = bibxml.getElementsByTagName('bibliography')[0]
   owner = bibliography.getAttribute('owner');
-  ownerName.innerHTML = owner + "'s Bibliography"
+  ownerName.value = owner + "'s Bibliography"
   pubs = bibliography.getElementsByTagName('publication');
   content = '';
   for (var i=0; i<pubs.length; i++) {
@@ -130,7 +134,8 @@ function writePubs(xmlData) {
     if (i==0) {
       active = ' active';
     }
-    content += '<span id="' + id + '" class="nav-group-item' + active + '">';
+    content += '<span id="' + id + '" title="' + title;
+    content += '" class="nav-group-item' + active + '">';
     content += '<span class="icon icon-doc-text-inv"></span>';
     content += '<span id="inner_' + id + '">' + id;
     content += '</span></span>';
@@ -351,4 +356,20 @@ function newBib() {
   setLeftVisible();
   setRightInvisible();
   writePubs(bibxml)
+}
+
+function changeOwner() {
+  owner = bibxml.getElementsByTagName('bibliography')[0].getAttribute('owner');
+  ownerName.value = owner;
+}
+
+function setOwner() {
+  bibxml.getElementsByTagName('bibliography')[0].setAttribute('owner', ownerName.value);
+  ownerName.value = ownerName.value + "'s Bibliography";
+}
+
+function checkOwner() {
+  if (ownerName.value.substring(ownerName.value.length-12, ownerName.value.length)!='Bibliography') {
+    ownerName.value = ownerName.value + "'s Bibliography";
+  }
 }

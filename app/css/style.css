@@ -16,3 +16,8 @@
   min-width:80px;
   padding-top:0.5em;
 }
+
+.owner-name {
+  width: 100%;
+  border: 0px;
+}
