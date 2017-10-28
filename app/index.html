@@ -15,6 +15,9 @@
       <header class="toolbar toolbar-header">
         <div class="toolbar-actions">
           <div class="btn-group">
+            <button class="btn btn-large btn-default" id="newBibButton">
+              <span class="icon icon-docs"></span>
+            </button>
             <button class="btn btn-large btn-default" id="openButton">
               <span class="icon icon-folder"></span>
             </button>
@@ -53,15 +56,15 @@
         <div class="pane-group">
 
           <div class="pane-med" id="publications">
-            <nav class="nav-group">
-              <h5 class="nav-group-title" id="owner-name">No bibliography loaded.</h5>
+            <nav class="nav-group" style="visibility:hidden;" id="pub-nav-group">
+              <h5 class="nav-group-title" id="owner-name">A. Author's Bibliography</h5>
               <span id="pub-list"></span>
             </nav>
           </div>
 
           <div class="pane padded" id="edit-pub">
 
-            <form>
+            <form style="visibility:hidden;" id="pub-form">
               <div class="form-group">
                 <label class="label-cell">Type</label>
                 <select class="form-control" id="pub-type">

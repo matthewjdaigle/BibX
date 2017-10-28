@@ -2,6 +2,7 @@ var dialog = require('electron').remote.dialog;
 var fs = require('fs');
 
 // Get button elements
+var newBibButton = document.getElementById('newBibButton');
 var openButton = document.getElementById('openButton');
 var saveButton = document.getElementById('saveButton');
 var addButton = document.getElementById('addButton');
@@ -16,6 +17,8 @@ var editpub = document.getElementById('edit-pub');
 var publist = document.getElementById('pub-list');
 var ownerName = document.getElementById('owner-name');
 var filenameFooter = document.getElementById('filename-footer');
+var pubNavGroup = document.getElementById('pub-nav-group');
+var pubForm = document.getElementById('pub-form');
 
 // Get input elements
 var pubType = document.getElementById('pub-type')
@@ -36,6 +39,7 @@ var pubDoi = document.getElementById('pub-doi');
 var pubAbstract = document.getElementById('pub-abstract');
 
 // Add button listeners
+newBibButton.addEventListener('click', newBib);
 openButton.addEventListener('click', openBib);
 saveButton.addEventListener('click', saveBib);
 addButton.addEventListener('click', addPub);
@@ -71,8 +75,25 @@ function openBib() {
       }
       // Otherwise, load the file
       loadpubs(filename.toString());
+      setVisible();
     }
   );
+}
+
+function setVisible() {
+  pubNavGroup.style.visibility = 'visible';
+  pubForm.style.visibility = 'visible';
+}
+
+function setLeftVisible() {
+  pubNavGroup.style.visibility = 'visible';
+}
+
+function setRightVisible() {
+  pubForm.style.visibility = 'visible';
+}
+function setRightInvisible() {
+  pubForm.style.visibility = 'hidden';
 }
 
 function loadpubs(xmlFile) {
@@ -132,6 +153,9 @@ function writePubs(xmlData) {
 }
 
 function fillEditPub(pub, index) {
+  if (bibxml.getElementsByTagName('publication').length==0) {
+    return;
+  }
   // Inactivate currently selected pub
   document.getElementById(activePub.id).className = 'nav-group-item';
   // Activate new pub
@@ -190,9 +214,14 @@ function updateActivePub() {
 }
 
 function saveBib() {
+  if (bibxml==null) {
+    return;
+  }
   filename = filenameFooter.innerHTML;
   if (filename.length>0) {
-    fs.writeFile(filename, new XMLSerializer().serializeToString(bibxml), (err) => {
+    xmlStr = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+    xmlStr += new XMLSerializer().serializeToString(bibxml);
+    fs.writeFile(filename, xmlStr, (err) => {
       if (err) {
           alert("An error ocurred writing the file" + err.message);
           console.log(err);
@@ -200,6 +229,24 @@ function saveBib() {
       }
     });
   }
+  else {
+    saveAsBib();
+  }
+}
+
+function saveAsBib() {
+  dialog.showSaveDialog({
+    filters: [{ name: 'xml', extensions: ['xml'] }],
+    properties: [ 'openFile' ] }, function ( filename ) {
+      if (filename==undefined) {
+        console.log("No file selected.")
+        return;
+      }
+      // Otherwise, save the file
+      filenameFooter.innerHTML = filename;
+      saveBib();
+    }
+  );
 }
 
 function navUp() {
@@ -217,10 +264,27 @@ var newCount = 0;
 
 function addPub() {
   // Create pub node
-  pub = activePub.cloneNode(true);
+  pub = bibxml.createElement('publication');
+  // Create children
+  pub.appendChild(bibxml.createElement('type'));
+  pub.appendChild(bibxml.createElement('title'));
+  pub.appendChild(bibxml.createElement('authors'));
+  pub.appendChild(bibxml.createElement('book'));
+  pub.appendChild(bibxml.createElement('school'));
+  pub.appendChild(bibxml.createElement('location'));
+  pub.appendChild(bibxml.createElement('volume'));
+  pub.appendChild(bibxml.createElement('number'));
+  pub.appendChild(bibxml.createElement('pages'));
+  pub.appendChild(bibxml.createElement('month'));
+  pub.appendChild(bibxml.createElement('year'));
+  pub.appendChild(bibxml.createElement('notes'));
+  pub.appendChild(bibxml.createElement('url'));
+  pub.appendChild(bibxml.createElement('doi'));
+  pub.appendChild(bibxml.createElement('abstract'));
+  // Fill in values
   pub.getElementsByTagName('type')[0].innerHTML = 'Conference';
   pub.getElementsByTagName('title')[0].innerHTML = 'My Title';
-  pub.getElementsByTagName('authors')[0] = pub.getElementsByTagName('authors')[0].children[0];
+  pub.getElementsByTagName('authors')[0].appendChild(bibxml.createElement('author'));
   pub.getElementsByTagName('authors')[0].children[0].innerHTML = 'My Authors';
   pub.getElementsByTagName('book')[0].innerHTML = '';
   pub.getElementsByTagName('school')[0].innerHTML = '';
@@ -232,13 +296,16 @@ function addPub() {
   pub.getElementsByTagName('year')[0].innerHTML = '';
   pub.getElementsByTagName('notes')[0].innerHTML = '';
   pub.getElementsByTagName('url')[0].innerHTML = '';
-  pub.id = 'NewPublication' + newCount++;
+  pub.setAttribute('id', 'NewPublication' + newCount++);
   pub.getElementsByTagName('doi')[0].innerHTML = '';
   pub.getElementsByTagName('abstract')[0].innerHTML = '';
   // Insert into bibxml
-  firstPub = bibxml.getElementsByTagName('publication')[0]
+  firstPub = bibxml.getElementsByTagName('publication')[0];
   bibxml.getElementsByTagName('bibliography')[0].insertBefore(pub, firstPub);
   writePubs(bibxml);
+  if (bibxml.getElementsByTagName('publication').length>0) {
+    setRightVisible();
+  }
 }
 
 function removePub() {
@@ -246,8 +313,13 @@ function removePub() {
     type: 'question',
     message: 'Delete ' + activePub.id + '? This cannot be undone.',
     buttons: ['OK', 'Cancel'],
-    title: 'Delete Publication?' }, function () {
-      deletePub(activePub, activePubIndex);
+    title: 'Delete Publication?' }, function (response) {
+      if (response==0) {
+        deletePub(activePub, activePubIndex);
+        if (bibxml.getElementsByTagName('publication').length==0) {
+          setRightInvisible();
+        }
+      }
     }
   );
 }
@@ -256,4 +328,12 @@ function deletePub(pub, index) {
   // Delete from xml
   bibxml.documentElement.removeChild(pub);
   writePubs(bibxml);
+}
+
+function newBib() {
+  bibxml = document.implementation.createDocument(null, 'bibliography', null);
+  bibxml.documentElement.setAttribute('owner', 'A. Author');
+  setLeftVisible();
+  setRightInvisible();
+  writePubs(bibxml)
 }
