@@ -6,7 +6,7 @@
     <!--Print Authors-->
     <xsl:apply-templates select="authors"/>
     <!--Print Title, include URL if available-->
-    <xsl:text>"</xsl:text>
+    <xsl:text> </xsl:text>
     <xsl:choose>
         <xsl:when test="url!=''"><a><xsl:attribute name="href"><xsl:value-of select="url"/></xsl:attribute>
             <xsl:value-of select="title"/></a>
@@ -15,7 +15,7 @@
             <xsl:value-of select="title"/>
         </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>," </xsl:text> 
+    <xsl:text>, </xsl:text>
     <!-- Print book -->
     <xsl:if test="type='dissertation'">PhD Dissertation, </xsl:if>
     <xsl:if test="school!=''"><xsl:value-of select="school"/>, </xsl:if>

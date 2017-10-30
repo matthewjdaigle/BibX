@@ -52,7 +52,6 @@
     </xsl:if>
 </xsl:template>
 
-<xsl:include href="publicationHTML.xslt"/>
+<xsl:include "publicationHTML.xslt"/>
 
 </xsl:stylesheet>
-

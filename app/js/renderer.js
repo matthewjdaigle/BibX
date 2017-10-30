@@ -1,3 +1,4 @@
+const {BrowserWindow} = require('electron').remote
 var dialog = require('electron').remote.dialog;
 var fs = require('fs');
 
@@ -19,6 +20,7 @@ var ownerName = document.getElementById('owner-name');
 var filenameFooter = document.getElementById('filename-footer');
 var pubNavGroup = document.getElementById('pub-nav-group');
 var pubForm = document.getElementById('pub-form');
+var exportType = document.getElementById('export-type');
 
 // Get input elements
 var pubType = document.getElementById('pub-type')
@@ -46,7 +48,7 @@ addButton.addEventListener('click', addPub);
 removeButton.addEventListener('click', removePub);
 upButton.addEventListener('click', navUp);
 downButton.addEventListener('click', navDown);
-//exportButton.addEventListener('click', exportBib);
+exportButton.addEventListener('click', exportBib);
 
 pubType.addEventListener('focusout', updateActivePub);
 pubTitle.addEventListener('focusout', updateActivePub);
@@ -70,6 +72,7 @@ ownerName.addEventListener('change', setOwner);
 ownerName.addEventListener('focusout', checkOwner);
 
 function openBib() {
+  fillExportMenu()
   dialog.showOpenDialog({
     filters: [{ name: 'xml', extensions: ['xml'] }],
     properties: [ 'openFile' ] }, function ( filename ) {
@@ -351,11 +354,12 @@ function deletePub(pub, index) {
 }
 
 function newBib() {
+  fillExportMenu()
   bibxml = document.implementation.createDocument(null, 'bibliography', null);
   bibxml.documentElement.setAttribute('owner', 'A. Author');
   setLeftVisible();
   setRightInvisible();
-  writePubs(bibxml)
+  writePubs(bibxml);
 }
 
 function changeOwner() {
@@ -371,5 +375,66 @@ function setOwner() {
 function checkOwner() {
   if (ownerName.value.substring(ownerName.value.length-12, ownerName.value.length)!='Bibliography') {
     ownerName.value = ownerName.value + "'s Bibliography";
+  }
+}
+
+function exportBib() {
+  dialog.showSaveDialog({
+    filters: [],
+    properties: [ 'openFile' ] }, function ( filename ) {
+      if (filename==undefined) {
+        console.log("No file selected.")
+        return;
+      }
+      // Otherwise, export
+      xsltFilename = './app/xml/' + exportType.value + '.xslt';
+      // Read file
+      fs.readFile(xsltFilename, 'utf-8', (err, data) => {
+        if(err){
+            alert("An error ocurred reading the file :" + err.message);
+            return;
+        }
+        parser = new DOMParser();
+        xsltData = parser.parseFromString(data,"text/xml");
+        xsltProcessor = new XSLTProcessor();
+        console.log(xsltData.documentElement)
+        xsltProcessor.importStylesheet(xsltData.documentElement);
+        resultDocument = xsltProcessor.transformToDocument(bibxml);
+        console.log(resultDocument);
+        method = xsltData.getElementsByTagName("output")[0].getAttribute('method')
+        var data;
+        if (method == 'text') {
+          data = resultDocument.documentElement.textContent;
+        }
+        else {
+          data = '<html>' + resultDocument.documentElement.innerHTML + '</html>';
+        }
+        fs.writeFile(filename, data, (err) => {
+          if (err) {
+              alert("An error ocurred writing the file" + err.message);
+              console.log(err);
+              return;
+          }
+        });
+      });
+    }
+  );
+}
+
+function fillExportMenu() {
+  while (exportType.options.length > 0) {
+    exportType.remove(exportType.options.length - 1);
+  }
+  // Fill in export options
+  var files = fs.readdirSync('./app/xml/')
+  for (i=0; i<files.length; i++) {
+    if (files[i].length>5) {
+      option = files[i].substring(0,files[i].length-5)
+      if (option.substring(0,2) == 'To') {
+        var opt = document.createElement('option');
+        opt.text = option;
+        exportType.add(opt, null);
+      }
+    }
   }
 }
