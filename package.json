@@ -1,6 +1,8 @@
 {
   "name" : "BibX",
-  "version" : "0.1.0",
+  "productName": "BibX",
+  "version" : "1.0.0",
   "main" : "main.js",
-  "author": "Matthew Daigle"
+  "author": "Matthew Daigle",
+  "repository": "https://github.com/matthewjdaigle/BibX",
 }

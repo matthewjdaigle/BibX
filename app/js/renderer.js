@@ -1,4 +1,4 @@
-const {BrowserWindow} = require('electron').remote
+const {app, Menu, MenuItem} = require('electron').remote
 var dialog = require('electron').remote.dialog;
 var fs = require('fs');
 
@@ -70,6 +70,86 @@ pubAbstract.addEventListener('focusout', updateActivePub);
 ownerName.addEventListener('focusin', changeOwner);
 ownerName.addEventListener('change', setOwner);
 ownerName.addEventListener('focusout', checkOwner);
+
+const template = [
+  {
+    label: 'File',
+    submenu: [
+      {label: 'New Bibliography', click() {newBib()}},
+      {label: 'Save', click() {saveBib()}},
+      {label: 'Save As...', click() {saveAsBib()}},
+    ]
+  },
+  {
+    label: 'View',
+    submenu: [
+      {role: 'resetzoom'},
+      {role: 'zoomin'},
+      {role: 'zoomout'},
+      {type: 'separator'},
+      {role: 'togglefullscreen'},
+      {type: 'separator'},
+      {role: 'toggledevtools'},
+    ]
+  },
+  {
+    role: 'window',
+    submenu: [
+      {role: 'minimize'},
+      {role: 'close'}
+    ]
+  },
+  {
+    role: 'help',
+    submenu: [
+      {
+        label: 'Learn More',
+        click () { require('electron').shell.openExternal('https://electron.atom.io') }
+      }
+    ]
+  }
+]
+
+if (process.platform === 'darwin') {
+  template.unshift({
+    label: app.getName(),
+    submenu: [
+      {role: 'about'},
+      {type: 'separator'},
+      {role: 'services', submenu: []},
+      {type: 'separator'},
+      {role: 'hide'},
+      {role: 'hideothers'},
+      {role: 'unhide'},
+      {type: 'separator'},
+      {role: 'quit'}
+    ]
+  })
+
+  // Edit menu
+  template[1].submenu.push(
+    {type: 'separator'},
+    {
+      label: 'Speech',
+      submenu: [
+        {role: 'startspeaking'},
+        {role: 'stopspeaking'}
+      ]
+    }
+  )
+
+  // Window menu
+  template[3].submenu = [
+    {role: 'close'},
+    {role: 'minimize'},
+    {role: 'zoom'},
+    {type: 'separator'},
+    {role: 'front'}
+  ]
+}
+
+const menu = Menu.buildFromTemplate(template)
+Menu.setApplicationMenu(menu)
 
 function openBib() {
   fillExportMenu()
