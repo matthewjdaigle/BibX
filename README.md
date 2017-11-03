@@ -1,14 +1,10 @@
 # BibX
 XML-based Personal Bibliography Management
 
-## Schema
-The schema for a bibliography is ./Schema/Bibliography.xsd.
-
-## Bibliographies
-Bibliography files are stored in the ./Bibliographies directory. An example file, ./Bibliographies/Example.xml, is included.
+BibX is available as a desktop application using Electron and Photon. A Python API (which is no longer supported) is available in the `bibx-python` branch.
 
 ## XSLT
-A set of XSLT files for transformations to various formats are incldued in ./XSLT. To date, the following transformations are available:
+A set of XSLT files for transformations to various formats are included in ./app/xml. To date, the following transformations are available:
 
 - Transformation to HTML, sorting by year.
 - Transformation to HTML, sorting by publication type.
@@ -17,8 +13,5 @@ A set of XSLT files for transformations to various formats are incldued in ./XSL
 
 The citation format roughly follows IEEE style. Support for other formats is forthcoming.
 
-## Python Framework & GUI
-A Python framework is available for creating bibliographies, reading and validating bibliography files, adding/removing publications, and performing the available transformations. A Python GUI is built on top of this framework implementing all the available functionality.
-
-### Dependencies
-The Python framework requires Python 3.x or above (tested on 3.4+). The lxml package is also required.
+## Contributions
+Contributions are welcome.
