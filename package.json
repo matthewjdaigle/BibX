@@ -1,8 +1,13 @@
 {
-  "name" : "BibX",
+  "name": "BibX",
   "productName": "BibX",
-  "version" : "1.0.0",
-  "main" : "main.js",
+  "version": "1.0.0",
+  "main": "main.js",
   "author": "Matthew Daigle",
   "repository": "https://github.com/matthewjdaigle/BibX",
+  "electron": "^1.4.3",
+  "electron-packager": "^8.1.0",
+  "devDependencies": {
+    "electron": "^1.7.9"
+  }
 }
