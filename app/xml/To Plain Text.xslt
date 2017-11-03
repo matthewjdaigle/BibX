@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:output method="text" omit-xml-declaration="yes" indent="no"/>
 
@@ -13,7 +13,7 @@
 
 <xsl:template match="publication">
     <!--Print Authors, Title-->
-    <xsl:apply-templates select="authors"/>"<xsl:value-of select="title"/><xsl:text>," </xsl:text> 
+    <xsl:apply-templates select="authors"/>"<xsl:value-of select="title"/><xsl:text>," </xsl:text>
     <!-- Print book -->
     <xsl:if test="type='dissertation'">PhD Dissertation, </xsl:if>
     <xsl:if test="school!=''"><xsl:value-of select="school"/>, </xsl:if>
@@ -58,4 +58,3 @@
 </xsl:template>
 
 </xsl:stylesheet>
-

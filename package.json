@@ -1,0 +1,15 @@
+{
+  "name": "BibX",
+  "productName": "BibX",
+  "version": "1.0.0",
+  "main": "main.js",
+  "author": "Matthew Daigle",
+  "repository": "https://github.com/matthewjdaigle/BibX",
+  "electron-packager": "^8.1.0",
+  "devDependencies": {
+    "electron": "^1.7.9"
+  },
+  "scripts": {
+    "package-mac":  "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=app/images/mac/bibx.icns --prune=true --out=release-builds"
+  }
+}
