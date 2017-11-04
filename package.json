@@ -10,6 +10,6 @@
     "electron": "^1.7.9"
   },
   "scripts": {
-    "package-mac":  "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=app/images/mac/bibx.icns --prune=true --out=release-builds"
+    "package-mac":  "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=app/images/mac/bibx.icns --prune=true --out=release"
   }
 }

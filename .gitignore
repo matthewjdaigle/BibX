@@ -1,4 +1,4 @@
 *.pyc
 .DS_Store
 node_modules/*
-release-builds
+release
