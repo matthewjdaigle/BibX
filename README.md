@@ -5,7 +5,7 @@ BibX is available as a desktop application using Electron and Photon. A Python A
 
 ## Releases
 
-For releases, see the [Releases](https://github.com/matthewjdaigle/BibX/releases) page. Currently, only an OSX release is provided, however builds for other systems can be produced from the source.
+Version 1.0.0 has been released. To download, please see the [Releases](https://github.com/matthewjdaigle/BibX/releases) page. Currently, only an OSX release is provided, however builds for other systems can be produced from the source.
 
 ## XSLT
 A set of xslt files for transformations to various formats are included in ./app/xml. To date, the following transformations are available:
