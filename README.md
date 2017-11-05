@@ -3,6 +3,10 @@ XML-based Personal Bibliography Management
 
 BibX is available as a desktop application using Electron and Photon. A Python API (which is no longer supported) is available in the `bibx-python` branch.
 
+## Releases
+
+For releases, see the [Releases](https://github.com/matthewjdaigle/BibX/releases) page. Currently, only an OSX release is provided, however builds for other systems can be produced from the source.
+
 ## XSLT
 A set of xslt files for transformations to various formats are included in ./app/xml. To date, the following transformations are available:
 
