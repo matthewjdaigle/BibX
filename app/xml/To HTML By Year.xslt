@@ -44,7 +44,7 @@
     </xsl:choose>
     <xsl:text>," </xsl:text>
     <!-- Print book -->
-    <xsl:if test="type='dissertation'">PhD Dissertation, </xsl:if>
+    <xsl:if test="type='Dissertation'">PhD Dissertation, </xsl:if>
     <xsl:if test="school!=''"><xsl:value-of select="school"/>, </xsl:if>
     <xsl:if test="book!=''"><i><xsl:value-of select="book"/></i>, </xsl:if>
     <!-- Print remaining details -->

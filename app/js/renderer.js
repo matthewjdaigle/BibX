@@ -471,16 +471,15 @@ function exportBib() {
       // Read file
       fs.readFile(xsltFilename, 'utf-8', (err, data) => {
         if(err){
+          console.log(data)
             alert("An error ocurred reading the file :" + err.message);
             return;
         }
         parser = new DOMParser();
         xsltData = parser.parseFromString(data,"text/xml");
         xsltProcessor = new XSLTProcessor();
-        console.log(xsltData.documentElement)
         xsltProcessor.importStylesheet(xsltData.documentElement);
         resultDocument = xsltProcessor.transformToDocument(bibxml);
-        console.log(resultDocument);
         method = xsltData.getElementsByTagName("output")[0].getAttribute('method')
         var data;
         if (method == 'text') {
@@ -509,8 +508,9 @@ function fillExportMenu() {
   var files = fs.readdirSync('./app/xml/')
   for (i=0; i<files.length; i++) {
     if (files[i].length>5) {
-      option = files[i].substring(0,files[i].length-5)
-      if (option.substring(0,2) == 'To') {
+      option = files[i].substring(0,files[i].length-5);
+      extension = files[i].substring(files[i].length-5,files[i].length);
+      if (option.substring(0,2) == 'To' && extension == '.xslt') {
         var opt = document.createElement('option');
         opt.text = option;
         exportType.add(opt, null);
