@@ -48,6 +48,8 @@
       </xsl:choose>
       month: <xsl:value-of select="month"/>
       notes: <xsl:value-of select="notes"/>
+      id: <xsl:value-of select="@id"/>
+      abstract: "<xsl:value-of select="abstract"/>"
 </xsl:template>
 
 <xsl:template match="authors">
