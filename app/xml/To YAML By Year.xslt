@@ -51,27 +51,9 @@
 </xsl:template>
 
 <xsl:template match="authors">
-    <xsl:choose>
-        <xsl:when test="count(./author)=2">
-            <xsl:for-each select="author">
-                <xsl:value-of select="."/>
-                <xsl:choose>
-                    <xsl:when test="position() = 1"> and </xsl:when>
-                    <xsl:otherwise></xsl:otherwise>
-                </xsl:choose>
-            </xsl:for-each>
-        </xsl:when>
-        <xsl:otherwise>
-            <xsl:for-each select="author">
-                <xsl:value-of select="."/>
-                <xsl:choose>
-                    <xsl:when test="position() = last()"></xsl:when>
-                    <xsl:when test="position() = last()-1">, and </xsl:when>
-                    <xsl:otherwise>, </xsl:otherwise>
-                </xsl:choose>
-            </xsl:for-each>
-        </xsl:otherwise>
-    </xsl:choose>
+<xsl:for-each select="author">
+        - <xsl:value-of select="."/>
+</xsl:for-each>
 </xsl:template>
 
 </xsl:stylesheet>
