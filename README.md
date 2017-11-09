@@ -18,4 +18,7 @@ A set of xslt files for transformations to various formats are included in ./app
 The citation format roughly follows IEEE style.
 
 ## Contributions
-Contributions are welcome. Specifically, new or updated xslt files are one way to contribute. The app automatically loads available transformations based on the xslt files in the xml folder, so placing new transformations in the folder will be incorporated into the export menu.
+
+Contributions are welcome. Please either open issues or contribute directly with pull requests to the `develop` branch.
+
+Specifically, new or updated xslt files are one way to contribute. The app automatically loads available transformations based on the xslt files in the xml folder, so placing new transformations in the folder will be incorporated into the export menu.
